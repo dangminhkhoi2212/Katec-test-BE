@@ -6,7 +6,7 @@ import { IProject } from "@/types/model.type";
 const ProjectSchema = new Schema<IProject>(
 	{
 		name: { type: String, required: true },
-		description: { type: String },
+		description: { type: String, maxlength: 2000 },
 		startDate: { type: Date, required: true },
 		endDate: { type: Date, required: true },
 		status: {

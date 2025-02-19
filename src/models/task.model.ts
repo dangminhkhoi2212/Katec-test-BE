@@ -6,7 +6,8 @@ import { ITask } from "@/types/model.type";
 const TaskSchema = new Schema<ITask>(
 	{
 		name: { type: String, required: true },
-		description: { type: String, required: true },
+		employee: { type: String, required: true },
+		description: { type: String, required: true, maxlength: 2000 },
 		dueDate: { type: Date, required: true },
 		assignedDate: { type: Date, required: true },
 		status: {

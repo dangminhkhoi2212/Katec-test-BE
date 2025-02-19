@@ -12,6 +12,7 @@ export interface IProject extends Document {
 }
 export interface ITask extends Document {
 	name: string;
+	employee: string;
 	description: string;
 	dueDate: Date;
 	status: string;

@@ -96,7 +96,7 @@ const updatePartial = async (
 			return;
 		}
 
-		const result: IProject | null = await projectService.update(
+		const result: IProject | null = await projectService.updatePartial(
 			new mongoose.Types.ObjectId(id),
 			req.body
 		);

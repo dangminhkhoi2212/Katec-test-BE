@@ -1,10 +1,10 @@
-import { PipelineStage, Types } from 'mongoose';
+import { PipelineStage, Types } from "mongoose";
 
-import { LIMIT, PAGE } from '@/constants/service.contants';
-import { Priority, Status } from '@/enum';
-import { ProjectModel } from '@/models/project.model';
-import { IProject } from '@/types/model.type';
-import { IQuery } from '@/types/service-query.type';
+import { LIMIT, PAGE } from "@/constants/service.contants";
+import { Priority, Status } from "@/enum";
+import { ProjectModel } from "@/models/project.model";
+import { IProject } from "@/types/model.type";
+import { IQuery } from "@/types/service-query.type";
 
 export interface IProjectQuery extends IQuery {
 	startDate?: Date;
@@ -20,7 +20,7 @@ const update = async (
 	id: Types.ObjectId,
 	data: IProject
 ): Promise<IProject | null> => {
-	return await ProjectModel.findByIdAndUpdate(id, data).lean();
+	return await ProjectModel.findByIdAndUpdate(id, data, { new: true }).lean();
 };
 
 const updatePartial = async (
