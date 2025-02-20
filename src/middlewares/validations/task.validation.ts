@@ -1,16 +1,27 @@
-import { NextFunction, Request, Response } from 'express';
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import Joi from 'joi';
+import { NextFunction, Request, Response } from "express";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import Joi from "joi";
+import mongoose from "mongoose";
 
-import { Priority, Status } from '@/enum';
-import { IProject } from '@/types/model.type';
-import { customResponse } from '@/utils/customResponse.util';
+import { Priority, Status } from "@/enum";
+import { ITask } from "@/types/model.type";
+import { customResponse } from "@/utils/customResponse.util";
 
-const schemaValidate: Joi.ObjectSchema<IProject> = Joi.object<IProject>({
+const isObjectId = Joi.string().custom((value, helpers) => {
+	if (!mongoose.Types.ObjectId.isValid(value)) {
+		return helpers.message({
+			custom: `"${helpers.state.path}" must be a valid ObjectId`,
+		});
+	}
+	return value;
+}, "ObjectId Validation");
+const schemaValidate: Joi.ObjectSchema<ITask> = Joi.object<ITask>({
 	name: Joi.string().min(0).max(250).required(),
 	description: Joi.string().max(2000).allow("").optional(),
-	startDate: Joi.date().min(new Date().setHours(0, 0, 0, 0)).required(),
-	endDate: Joi.date().min(new Date().setHours(0, 0, 0, 0)).required(),
+	assignedDate: Joi.date().min(new Date().setHours(0, 0, 0, 0)).required(),
+	dueDate: Joi.date().min(new Date().setHours(0, 0, 0, 0)).required(),
+	employee: Joi.string().max(30).required(),
+	project: isObjectId.required(),
 	status: Joi.string()
 		.valid(...Object.values(Status))
 		.required(),
@@ -19,11 +30,11 @@ const schemaValidate: Joi.ObjectSchema<IProject> = Joi.object<IProject>({
 		.required(),
 	isDeleted: Joi.boolean().default(false),
 });
-export const partialSchemaValidate = schemaValidate.fork(
+const partialSchemaValidate = schemaValidate.fork(
 	Object.keys(schemaValidate.describe().keys),
 	(schema) => schema.optional()
 );
-export const projectValidation = (
+export const taskValidation = (
 	req: Request,
 	res: Response,
 	next: NextFunction
@@ -41,7 +52,7 @@ export const projectValidation = (
 	}
 	next();
 };
-export const partialProjectValidation = (
+export const partialTaskValidation = (
 	req: Request,
 	res: Response,
 	next: NextFunction

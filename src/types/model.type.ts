@@ -2,7 +2,7 @@ import { Document, Schema } from "mongoose";
 
 export interface IProject extends Document {
 	name: string;
-	description: string;
+	description?: string;
 	startDate: Date;
 	endDate: Date;
 	status: string;
@@ -13,11 +13,13 @@ export interface IProject extends Document {
 export interface ITask extends Document {
 	name: string;
 	employee: string;
-	description: string;
+	description?: string;
 	dueDate: Date;
 	status: string;
+	priority: string;
 	assignedDate: Date;
 	project: Schema.Types.ObjectId;
+	isDeleted: boolean;
 }
 export interface IDocument extends Document {
 	name: string;

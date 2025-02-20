@@ -9,6 +9,7 @@ import clientErrorHandler from "@/middlewares/error-handler/clientErrorHandler.m
 import { errorHandler } from "@/middlewares/error-handler/errorHandler.middleware";
 import { logErrors } from "@/middlewares/error-handler/logErrors.middleware";
 import projectRoute from "@/routes/project.route";
+import taskRoute from "@/routes/task.route";
 import swaggerDocJSON from "@/swagger/swagger-output.json";
 import { clerkMiddleware } from "@clerk/express";
 
@@ -49,7 +50,8 @@ const runServer = async (): Promise<void> => {
 	//routes
 
 	app.use("/api/projects", projectRoute);
-	app.get("/health-check", (req: Request, res: Response) => {
+	app.use("/api/tasks", taskRoute);
+	app.get("/api/health-check", (req: Request, res: Response) => {
 		res.status(StatusCodes.OK).send("This is a server!");
 	});
 	// log errors
