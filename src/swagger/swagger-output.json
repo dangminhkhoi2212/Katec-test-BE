@@ -18,7 +18,7 @@
   ],
   "securityDefinitions": {},
   "paths": {
-    "/health-check": {
+    "/api/health-check": {
       "get": {
         "description": "",
         "responses": {
@@ -28,7 +28,7 @@
         }
       }
     },
-    "/projects/{id}": {
+    "/api/projects/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -84,7 +84,81 @@
         }
       }
     },
-    "/projects/": {
+    "/api/projects/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/tasks/": {
       "get": {
         "description": "",
         "responses": {

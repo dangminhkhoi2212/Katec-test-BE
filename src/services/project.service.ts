@@ -50,8 +50,6 @@ const getOneById = async (id: Types.ObjectId): Promise<IProject | null> => {
 const getAll = async (query: IProjectQuery): Promise<IProject[]> => {
 	const aggregation: PipelineStage[] = [];
 	const {
-		startDate,
-		endDate,
 		priority,
 		status,
 		isDeleted,
@@ -91,16 +89,10 @@ const getAll = async (query: IProjectQuery): Promise<IProject[]> => {
 
 	if (status) match.status = status;
 	if (priority) match.priority = priority;
-	if (startDate && endDate) {
-		match.endDate = {};
-		if (startDate) match.endDate.$gte = new Date(startDate);
-		if (endDate) match.endDate.$lte = new Date(endDate);
-	}
 
 	if (Object.keys(match).length > 0) {
 		aggregation.push({ $match: match });
 	}
-	// Sorting
 	if (search) {
 		aggregation.push({ $sort: { score: -1 } });
 	} else {

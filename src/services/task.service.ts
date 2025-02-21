@@ -9,6 +9,7 @@ import { IQuery } from "@/types/service-query.type";
 
 export interface ITaskQuery extends IQuery {
 	assignedDate?: Date;
+	date?: string;
 	dueDate?: Date;
 	status?: Status;
 	search?: string;
@@ -51,6 +52,7 @@ const getAll = async (query: ITaskQuery): Promise<ITask[]> => {
 		project,
 		search,
 		isDeleted,
+		date,
 		limit = LIMIT,
 		page = PAGE,
 	} = query;
@@ -86,35 +88,29 @@ const getAll = async (query: ITaskQuery): Promise<ITask[]> => {
 	if (priority) match.priority = priority;
 	if (project) match.project = new mongoose.Types.ObjectId(project);
 
-	if (assignedDate && dueDate) {
-		match.dueDate = {};
-		const startOfDay = new Date(assignedDate);
-		startOfDay.setHours(0, 0, 0, 0);
+	if (date) {
+		const dateMatch = new Date(date);
+		dateMatch.setHours(0, 0, 0, 0);
 
-		const endOfDay = new Date(dueDate);
-		endOfDay.setHours(23, 59, 59, 999);
+		match.dueDate = match.dueDate || {};
+		match.assignedDate = match.assignedDate || {};
 
-		match.dueDate.$gte = startOfDay;
-		match.dueDate.$lte = endOfDay;
+		match.assignedDate.$lte = dateMatch;
+		match.dueDate.$gte = dateMatch;
 	}
 
 	if (Object.keys(match).length > 0) {
 		aggregation.push({ $match: match });
 	}
 
-	// Sorting
-	if (search) {
-		aggregation.push({ $sort: { score: -1 } });
-	} else {
-		aggregation.push({ $sort: { assignedDate: 1 } });
-	}
+	aggregation.push({ $sort: search ? { score: -1 } : { assignedDate: 1 } });
 
-	// Pagination
 	if (page && limit) {
 		aggregation.push({ $skip: (page - 1) * limit });
 		aggregation.push({ $limit: limit });
 	}
 
+	console.log("🚀 ~ getAll ~ aggregation:", match);
 	return await TaskModel.aggregate(aggregation);
 };
 
